@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La mia cassa</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e8f4ff;--card:#fff;--ink:#1b2a41;--mute:#5b6b82;--main:#1f6feb;--on-main:#fff;--sun:#ffc533;--ok:#13a56b;--line:#cfe0f3;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a2b;--card:#1a2840;--ink:#eaf2ff;--mute:#9db0cc;--main:#5b9bff;--on-main:#0b1424;--sun:#ffd05a;--ok:#3ddc97;--line:#2b3d5c}}
+:root[data-theme="dark"]{--bg:#101a2b;--card:#1a2840;--ink:#eaf2ff;--mute:#9db0cc;--main:#5b9bff;--on-main:#0b1424;--sun:#ffd05a;--ok:#3ddc97;--line:#2b3d5c}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Baloo 2","Trebuchet MS",system-ui,sans-serif;font-size:18px;line-height:1.3}
+main{max-width:640px;margin:0 auto;padding:14px}
+h1{margin:4px 0 10px;font-size:30px}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{flex:1;padding:10px;border:2px solid var(--main);background:var(--card);color:var(--main);border-radius:14px;font:inherit;font-weight:700}
+.tabs button[aria-pressed="true"]{background:var(--main);color:var(--on-main)}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.chips{display:flex;gap:6px;overflow-x:auto;margin:8px 0;padding-bottom:4px}.chip{flex:none;padding:6px 12px;border:2px solid var(--main);border-radius:999px;background:var(--card);color:var(--main);font:inherit;font-weight:700;cursor:pointer}.chip[aria-pressed="true"]{background:var(--main);color:var(--on-main)}
+.qrgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}.qrc{background:#fff;color:#000;border:1px dashed #888;border-radius:10px;padding:8px;text-align:center;break-inside:avoid}.qrc svg{width:100%;height:auto;display:block}
+@media print{.tabs,.chips,#shop,#tags,h1,#support,#qrHead{display:none!important}body{background:#fff}}
+.prod{display:flex;flex-direction:column;align-items:center;padding:10px 6px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;font:inherit;cursor:pointer}
+.prod[aria-pressed="true"]{border-color:var(--main);box-shadow:0 0 0 3px var(--main)}
+.prod .e{font-size:44px;line-height:1.1}
+.prod .p{color:var(--mute);font-weight:700}
+.btn{padding:12px 16px;border:0;border-radius:14px;background:var(--main);color:var(--on-main);font:inherit;font-weight:700;cursor:pointer}
+.btn.sun{background:var(--sun);color:#1b2a41}
+.btn.ok{background:var(--ok);color:#06210f}
+.btn.ghost{background:transparent;color:var(--main);border:2px solid var(--main)}
+.btn:disabled{opacity:.45}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.items{list-style:none;margin:0;padding:0}
+.items li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line)}
+.total{font-size:40px;font-weight:700;text-align:right}
+.status{padding:10px 12px;border-radius:12px;background:var(--bg);color:var(--mute);margin:8px 0}
+.notes{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.big{font-size:26px;font-weight:700}
+.hidden{display:none}
+.flash{animation:f .35s}
+@keyframes f{from{background:var(--sun)}to{background:var(--card)}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>🛒 La mia cassa</h1>
+<div class="tabs" role="group" aria-label="Modalità">
+<button id="tabShop" aria-pressed="true">Cassa</button>
+<button id="tabTag" aria-pressed="false">Prepara tag</button>
+<button id="tabQr" aria-pressed="false">Stampa QR</button>
+</div>
+
+<section id="shop">
+<div class="card">
+<div class="row"><strong>Scansiona un prodotto</strong><div style="display:flex;gap:6px"><button class="btn sun" id="scanBtn">Attiva NFC</button><button class="btn sun" id="qrBtn">Fotocamera QR</button></div></div>
+<video id="cam" class="hidden" playsinline muted style="width:100%;border-radius:14px;margin-top:8px"></video><canvas id="cv" class="hidden"></canvas>
+<input type="file" id="photoIn" accept="image/*" capture="environment" class="hidden">
+<button class="btn ghost" id="photoBtn" style="margin-top:8px;width:100%">Scatta foto al QR</button>
+<div class="status" id="scanStatus">Usa l’NFC (Android) o la fotocamera per leggere un QR, oppure tocca i prodotti.</div>
+<div class="chips" id="chipsShop" aria-label="Categorie"></div>
+<div class="grid" id="shopGrid" aria-label="Prodotti (tocca per aggiungere)"></div>
+</div>
+<div class="card" id="cartCard">
+<strong>Il conto</strong>
+<ul class="items" id="items"></ul>
+<div class="total" id="total">0,00 €</div>
+<div class="row" style="margin-top:8px"><button class="btn ghost" id="clearBtn">Svuota</button><button class="btn" id="payBtn" disabled>Paga</button></div>
+</div>
+<div class="card hidden" id="payCard">
+<strong>Quanto dà il cliente?</strong>
+<div class="notes" id="notes"></div>
+<div class="big" id="given">Dato: 0,00 €</div>
+<div class="big" id="change"></div>
+<div class="row" style="margin-top:8px"><button class="btn ghost" id="resetGiven">Azzera soldi</button><button class="btn ok" id="doneBtn" disabled>Fatto!</button></div>
+</div>
+</section>
+
+<section id="tags" class="hidden">
+<div class="card">
+<strong>Scrivi un tag NFC</strong>
+<p>Scegli un prodotto, premi “Scrivi sul tag” e avvicina un tag NFC vuoto al telefono. Poi attaccalo al giocattolo.</p>
+<div class="chips" id="chipsTag" aria-label="Categorie"></div>
+<div class="grid" id="tagGrid"></div>
+<div class="status" id="tagStatus">Nessun prodotto scelto.</div>
+<button class="btn sun" id="writeBtn" disabled>Scrivi sul tag</button>
+</div>
+</section>
+
+<section id="qr" class="hidden">
+<div class="card" id="qrHead">
+<strong>Codici QR dei prodotti</strong>
+<p>Stampa questa pagina, ritaglia i codici e attaccali ai giocattoli. Poi nella cassa premi “Fotocamera QR” e inquadrali. Funziona su qualsiasi telefono o tablet.</p>
+<div class="chips" id="chipsQr" aria-label="Categorie"></div>
+<button class="btn sun" id="printBtn">Stampa</button>
+</div>
+<div class="qrgrid" id="qrGrid"></div>
+</section>
+
+<p class="status" id="support"></p>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>if(!window.jsQR){document.write('<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"><\/script>')}if(!window.qrcode){document.write('<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"><\/script>')}</script>
+<script>
+var CATS=[{k:"tutti",e:"🛍️",n:"Tutti"},{k:"alimentari",e:"🍎",n:"Alimentari"},{k:"elettronica",e:"🎧",n:"Elettronica"},{k:"libri",e:"📚",n:"Libri"},{k:"giocattoli",e:"🧸",n:"Giocattoli"},{k:"vestiti",e:"👕",n:"Vestiti"}];
+var PRODUCTS=[
+{cat:"alimentari",id:"mela",e:"🍎",n:"Mela",c:50},{cat:"alimentari",id:"pane",e:"🍞",n:"Pane",c:120},{cat:"alimentari",id:"latte",e:"🥛",n:"Latte",c:150},
+{cat:"alimentari",id:"formaggio",e:"🧀",n:"Formaggio",c:250},{cat:"alimentari",id:"gelato",e:"🍦",n:"Gelato",c:200},{cat:"alimentari",id:"biscotti",e:"🍪",n:"Biscotti",c:180},
+{cat:"alimentari",id:"banana",e:"🍌",n:"Banana",c:70},{cat:"alimentari",id:"succo",e:"🧃",n:"Succo",c:100},
+{cat:"elettronica",id:"torcia",e:"🔦",n:"Torcia",c:800},{cat:"elettronica",id:"cuffie",e:"🎧",n:"Cuffie",c:2500},{cat:"elettronica",id:"orologio",e:"⌚",n:"Orologio",c:4000},{cat:"elettronica",id:"telefono",e:"📱",n:"Telefono",c:9000},
+{cat:"libri",id:"fiabe",e:"📕",n:"Fiabe",c:900},{cat:"libri",id:"fumetto",e:"📗",n:"Fumetto",c:500},{cat:"libri",id:"atlante",e:"📘",n:"Atlante",c:1500},{cat:"libri",id:"quaderno",e:"📓",n:"Quaderno",c:300},
+{cat:"giocattoli",id:"orsetto",e:"🧸",n:"Orsetto",c:1200},{cat:"giocattoli",id:"pallone",e:"⚽",n:"Pallone",c:800},{cat:"giocattoli",id:"puzzle",e:"🧩",n:"Puzzle",c:1000},{cat:"giocattoli",id:"macchinina",e:"🚗",n:"Macchinina",c:600},
+{cat:"vestiti",id:"maglietta",e:"👕",n:"Maglietta",c:1000},{cat:"vestiti",id:"pantaloni",e:"👖",n:"Pantaloni",c:2000},{cat:"vestiti",id:"calzini",e:"🧦",n:"Calzini",c:400},{cat:"vestiti",id:"cappello",e:"🧢",n:"Cappello",c:700}];
+var PREFIX="cassa:";
+var cart={},given=0,selTag=null,cat="tutti";
+var $=function(i){return document.getElementById(i)};
+function eur(c){return (c/100).toLocaleString("it-IT",{style:"currency",currency:"EUR"})}
+function find(id){return PRODUCTS.filter(function(p){return p.id===id})[0]}
+
+function buildGrid(el,onclick,pressed){
+ el.innerHTML="";
+ PRODUCTS.filter(function(p){return cat==="tutti"||p.cat===cat}).forEach(function(p){
+  var b=document.createElement("button");b.className="prod";b.dataset.id=p.id;
+  b.setAttribute("aria-pressed",pressed===p.id?"true":"false");
+  b.innerHTML='<span class="e">'+p.e+'</span><span>'+p.n+'</span><span class="p">'+eur(p.c)+'</span>';
+  b.onclick=function(){onclick(p)};el.appendChild(b);
+ });
+}
+function addItem(p){cart[p.id]=(cart[p.id]||0)+1;renderCart();var t=$("cartCard");t.classList.remove("flash");void t.offsetWidth;t.classList.add("flash")}
+function sum(){return Object.keys(cart).reduce(function(s,k){return s+find(k).c*cart[k]},0)}
+function renderCart(){
+ var ul=$("items");ul.innerHTML="";
+ Object.keys(cart).forEach(function(k){var p=find(k);var li=document.createElement("li");
+  li.innerHTML="<span>"+p.e+" "+p.n+" × "+cart[k]+"</span><span>"+eur(p.c*cart[k])+"</span>";ul.appendChild(li)});
+ $("total").textContent=eur(sum());
+ $("payBtn").disabled=sum()===0;
+ if(sum()===0){$("payCard").classList.add("hidden")}
+ renderPay();
+}
+function renderPay(){
+ var t=sum();$("given").textContent="Dato: "+eur(given);
+ var d=given-t,ch=$("change");
+ if(given===0){ch.textContent=""}else if(d<0){ch.textContent="Mancano "+eur(-d)}else{ch.textContent="Resto: "+eur(d)}
+ $("doneBtn").disabled=!(t>0&&given>=t);
+}
+var NOTES=[1,2,5,10,20,50,100];
+NOTES.forEach(function(n){var b=document.createElement("button");b.className="btn";b.textContent=n+" €";
+ b.onclick=function(){given+=n*100;renderPay()};$("notes").appendChild(b)});
+var cents=[10,20,50];
+cents.forEach(function(n){var b=document.createElement("button");b.className="btn sun";b.textContent=n+" cent";
+ b.onclick=function(){given+=n;renderPay()};$("notes").appendChild(b)});
+$("payBtn").onclick=function(){$("payCard").classList.remove("hidden");$("payCard").scrollIntoView({behavior:"smooth"})};
+$("resetGiven").onclick=function(){given=0;renderPay()};
+$("clearBtn").onclick=function(){cart={};given=0;renderCart()};
+$("doneBtn").onclick=function(){cart={};given=0;renderCart();$("scanStatus").textContent="Grazie e arrivederci! Prossimo cliente."};
+
+// Tabs
+function showTab(t){
+ if(t!=="shop")stopCam();
+ $("shop").classList.toggle("hidden",t!=="shop");$("tags").classList.toggle("hidden",t!=="tags");$("qr").classList.toggle("hidden",t!=="qr");
+ $("tabShop").setAttribute("aria-pressed",t==="shop");$("tabTag").setAttribute("aria-pressed",t==="tags");$("tabQr").setAttribute("aria-pressed",t==="qr");
+}
+$("tabShop").onclick=function(){showTab("shop")};
+$("tabTag").onclick=function(){showTab("tags")};
+$("tabQr").onclick=function(){showTab("qr")};
+$("printBtn").onclick=function(){window.print()};
+
+// QR scanner
+var camStream=null,camOn=false,lastQR="",lastT=0;
+function stopCam(){camOn=false;if(camStream){camStream.getTracks().forEach(function(t){t.stop()});camStream=null}$("cam").classList.add("hidden");$("qrBtn").textContent="Fotocamera QR"}
+$("qrBtn").onclick=async function(){
+ if(camOn){stopCam();$("scanStatus").textContent="Fotocamera spenta.";return}
+ if(!navigator.mediaDevices){$("scanStatus").textContent="Questo browser non permette la fotocamera qui. Apri il link direttamente in Chrome.";return}
+ if(!window.jsQR&&!window.BarcodeDetector){$("scanStatus").textContent="Lettore QR non caricato. Controlla la connessione e ricarica la pagina.";return}
+ try{
+  camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"},audio:false});
+  var v=$("cam");v.srcObject=camStream;v.classList.remove("hidden");await v.play();camOn=true;
+  $("qrBtn").textContent="Spegni fotocamera";$("scanStatus").textContent="Fotocamera attiva: inquadra il QR del prodotto.";
+  requestAnimationFrame(tick);
+ }catch(e){stopCam();$("scanStatus").textContent="Non riesco ad aprire la fotocamera: controlla il permesso."}
+};
+async function tick(){
+ if(!camOn)return;var v=$("cam"),data=null;
+ if(v.readyState===v.HAVE_ENOUGH_DATA){
+  try{
+   if(window.jsQR){var c=$("cv"),x=c.getContext("2d",{willReadFrequently:true});c.width=v.videoWidth;c.height=v.videoHeight;x.drawImage(v,0,0);var q=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height);data=q?q.data:null}
+   else if(window.BarcodeDetector){var r=await new BarcodeDetector({formats:["qr_code"]}).detect(v);data=r.length?r[0].rawValue:null}
+  }catch(e){}
+  if(data&&data.indexOf(PREFIX)===0&&(data!==lastQR||Date.now()-lastT>1500)){
+   var p=find(data.slice(PREFIX.length));lastQR=data;lastT=Date.now();
+   if(p){addItem(p);$("scanStatus").textContent="Bip! "+p.e+" "+p.n+" aggiunto.";if(navigator.vibrate)navigator.vibrate(60)}
+  }
+ }
+ requestAnimationFrame(tick);
+}
+
+// QR da foto
+$("photoBtn").onclick=function(){$("photoIn").click()};
+$("photoIn").onchange=async function(e){
+ var f=e.target.files[0];e.target.value="";if(!f)return;
+ $("scanStatus").textContent="Leggo la foto…";
+ try{
+  var bmp=await createImageBitmap(f);var s=Math.min(1,1200/Math.max(bmp.width,bmp.height));
+  var c=$("cv"),x=c.getContext("2d",{willReadFrequently:true});c.width=Math.round(bmp.width*s);c.height=Math.round(bmp.height*s);x.drawImage(bmp,0,0,c.width,c.height);
+  var data=null;
+  if(window.jsQR){var q=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height);data=q?q.data:null}
+  if(!data&&window.BarcodeDetector){var r=await new BarcodeDetector({formats:["qr_code"]}).detect(c);data=r.length?r[0].rawValue:null}
+  var p=data&&data.indexOf(PREFIX)===0?find(data.slice(PREFIX.length)):null;
+  if(p){addItem(p);$("scanStatus").textContent="Bip! "+p.e+" "+p.n+" aggiunto."}
+  else{$("scanStatus").textContent="Non trovo un QR della cassa nella foto. Riprova da più vicino."}
+ }catch(err){$("scanStatus").textContent="Non riesco a leggere la foto. Riprova."}
+};
+
+// QR sheet
+function buildQr(){
+ var g=$("qrGrid");g.innerHTML="";
+ if(!window.qrcode){g.textContent="Generatore QR non disponibile.";return}
+ PRODUCTS.filter(function(p){return cat==="tutti"||p.cat===cat}).forEach(function(p){
+  var q=qrcode(0,"M");q.addData(PREFIX+p.id);q.make();
+  var d=document.createElement("div");d.className="qrc";
+  d.innerHTML=q.createSvgTag(4,2)+'<div style="font-size:30px">'+p.e+'</div><div><b>'+p.n+'</b> · '+eur(p.c)+'</div>';g.appendChild(d)});
+}
+
+// NFC
+var nfcOk=("NDEFReader" in window);
+$("support").textContent=nfcOk?"":"Questo dispositivo non legge i tag NFC dal browser: usa la fotocamera con i codici QR, oppure tocca i prodotti.";
+if(!nfcOk)$("scanBtn").classList.add("hidden");
+if(!nfcOk)$("support").classList.remove("hidden");else $("support").classList.add("hidden");
+var scanning=false,ctrl=null;
+$("scanBtn").onclick=async function(){
+ if(!nfcOk){$("scanStatus").textContent="NFC non disponibile in questo browser. Apri la pagina con Chrome su Android.";return}
+ if(scanning){ctrl&&ctrl.abort();scanning=false;$("scanBtn").textContent="Attiva NFC";$("scanStatus").textContent="Lettore spento.";return}
+ try{
+  var r=new NDEFReader();ctrl=new AbortController();
+  await r.scan({signal:ctrl.signal});
+  scanning=true;$("scanBtn").textContent="Spegni NFC";
+  $("scanStatus").textContent="Lettore attivo: avvicina un prodotto!";
+  r.onreading=function(ev){
+   var found=null;
+   ev.message.records.forEach(function(rec){
+    if(rec.recordType==="text"){
+     var txt=new TextDecoder(rec.encoding||"utf-8").decode(rec.data);
+     if(txt.indexOf(PREFIX)===0){found=find(txt.slice(PREFIX.length))}
+    }});
+   if(found){addItem(found);$("scanStatus").textContent="Bip! "+found.e+" "+found.n+" aggiunto."}
+   else{$("scanStatus").textContent="Questo tag non è un prodotto della cassa."}
+  };
+  r.onreadingerror=function(){$("scanStatus").textContent="Non riesco a leggere il tag. Riprova."};
+ }catch(e){$("scanStatus").textContent="Non posso attivare l’NFC: controlla che sia acceso e di aver dato il permesso."}
+};
+
+// Write tags
+function pickTag(p){selTag=p;buildGrid($("tagGrid"),pickTag,p.id);$("tagStatus").textContent="Scelto: "+p.e+" "+p.n+". Ora premi “Scrivi sul tag”.";$("writeBtn").disabled=false}
+$("writeBtn").onclick=async function(){
+ if(!nfcOk){$("tagStatus").textContent="Per scrivere i tag serve Chrome su Android.";return}
+ if(!selTag)return;
+ try{
+  $("tagStatus").textContent="Avvicina un tag vuoto al telefono…";
+  await new NDEFReader().write({records:[{recordType:"text",data:PREFIX+selTag.id}]});
+  $("tagStatus").textContent="Fatto! Tag scritto: "+selTag.e+" "+selTag.n+". Scegli il prossimo.";
+ }catch(e){$("tagStatus").textContent="Scrittura non riuscita. Avvicina bene il tag e riprova."}
+};
+
+function buildChips(){
+ ["chipsShop","chipsTag","chipsQr"].forEach(function(id){var el=$(id);el.innerHTML="";
+  CATS.forEach(function(c){var b=document.createElement("button");b.className="chip";b.setAttribute("aria-pressed",cat===c.k?"true":"false");b.textContent=c.e+" "+c.n;
+   b.onclick=function(){cat=c.k;buildChips();buildGrid($("shopGrid"),addItem,null);buildGrid($("tagGrid"),pickTag,selTag&&selTag.id);buildQr()};el.appendChild(b)})})}
+buildChips();
+buildGrid($("shopGrid"),addItem,null);
+buildGrid($("tagGrid"),pickTag,null);
+buildQr();
+renderCart();
+</script>
+</body>
+</html>
