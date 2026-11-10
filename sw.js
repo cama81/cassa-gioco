@@ -1,7 +1,7 @@
 // Service worker della cassa: precache dell'app e funzionamento offline.
 // Quando modifichi un qualsiasi file dell'app, incrementa VERSION così
 // i dispositivi scaricano la nuova versione.
-var VERSION = "v1";
+var VERSION = "v2";
 var CACHE = "cassa-" + VERSION;
 
 var ASSETS = [

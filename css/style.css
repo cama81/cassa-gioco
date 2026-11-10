@@ -19,6 +19,7 @@ h1 svg{width:36px;height:36px;border-radius:8px}
 .top-cart-bar{
   background:var(--main);color:var(--on-main);border-radius:14px;padding:12px 16px;margin-bottom:12px;
   display:flex;justify-content:space-between;align-items:center;font-weight:700;cursor:pointer;
+  width:100%;border:0;font:inherit;text-align:left;
   box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:transform 0.15s ease;
 }
 .top-cart-bar:active{transform:scale(0.98)}
@@ -26,14 +27,14 @@ h1 svg{width:36px;height:36px;border-radius:8px}
 .badge-pop{animation:pop 0.3s cubic-bezier(0.175,0.885,0.32,1.275)}
 @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.35)}100%{transform:scale(1)}}
 
-.tabs{display:flex;gap:8px;margin-bottom:12px}
-.tabs button{flex:1;padding:10px;border:2px solid var(--main);background:var(--card);color:var(--main);border-radius:14px;font:inherit;font-weight:700}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{flex:1;padding:10px 2px;font-size:14px;white-space:nowrap;cursor:pointer;border:2px solid var(--main);background:var(--card);color:var(--main);border-radius:14px;font:inherit;font-weight:700}
 .tabs button[aria-pressed="true"]{background:var(--main);color:var(--on-main)}
 .card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px;margin-bottom:12px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
 
 .qrgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}.qrc{background:#fff;color:#000;border:1px dashed #888;border-radius:10px;padding:8px;text-align:center;break-inside:avoid}.qrc svg{width:100%;height:auto;display:block}
-@media print{.tabs,#shop,#tags,h1,.top-cart-bar,#qrHead,.header-row,.cart-drawer,.drawer-overlay,.modal-overlay,#support{display:none!important}body{background:#fff}}
+@media print{.tabs,#shop,#tags,h1,.top-cart-bar,#qrHead,.header-row,.cart-drawer,.drawer-overlay,.modal-overlay,#prod,#sales{display:none!important}body{background:#fff}}
 
 .prod{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px 4px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;font:inherit;cursor:pointer;touch-action:manipulation;min-height:110px}
 .prod[aria-pressed="true"]{border-color:var(--main);box-shadow:0 0 0 3px var(--main)}
@@ -61,7 +62,7 @@ h1 svg{width:36px;height:36px;border-radius:8px}
 .items{list-style:none;margin:0 0 14px;padding:0;flex-grow:1;overflow-y:auto}
 .items li{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}
 .qty-controls{display:flex;align-items:center;gap:6px}
-.qty-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--main);background:var(--card);color:var(--main);font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.qty-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--main);background:var(--card);color:var(--main);font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .total{font-size:36px;font-weight:700;text-align:right;margin:10px 0}
 .status{padding:10px 12px;border-radius:12px;background:var(--bg);color:var(--mute);margin:8px 0}
 .notes{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
@@ -71,7 +72,7 @@ h1 svg{width:36px;height:36px;border-radius:8px}
 /* Category Modal / Menu */
 .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s}
 .modal-overlay.open{opacity:1;pointer-events:auto}
-.modal-content{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:20px;width:90%;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,0.2);transform:scale(0.95);transition:transform 0.2s}
+.modal-content{max-height:90vh;overflow-y:auto;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:20px;width:90%;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,0.2);transform:scale(0.95);transition:transform 0.2s}
 .modal-overlay.open .modal-content{transform:scale(1)}
 .modal-chips{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:15px}
 .chip{padding:10px 12px;border:2px solid var(--main);border-radius:12px;background:var(--card);color:var(--main);font:inherit;font-weight:700;cursor:pointer;text-align:center}
@@ -80,3 +81,28 @@ h1 svg{width:36px;height:36px;border-radius:8px}
 .flash{animation:f .35s}
 @keyframes f{from{background:var(--sun)}to{background:var(--card)}}
 @media (prefers-reduced-motion:reduce){.flash{animation:none}}
+
+/* ---- Prodotti, incassi, moduli ---- */
+.muted{color:var(--mute);font-size:15px;margin:6px 0}
+.cat-head{font-size:15px;color:var(--mute);font-weight:700;margin:14px 0 2px}
+.plist{list-style:none;margin:0;padding:0}
+.plist li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.plist .pe{font-size:30px;line-height:1}
+.plist .pn{flex:1;min-width:0;overflow-wrap:anywhere}
+.plist .pp{color:var(--mute);font-weight:700;white-space:nowrap}
+.icon-btn{width:40px;height:40px;flex:none;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-size:18px;cursor:pointer}
+.sound-btn{padding:10px 12px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.stat{background:var(--bg);border-radius:12px;padding:10px 12px}
+.stat span{display:block;color:var(--mute);font-size:15px}
+.stat b{display:block;font-size:24px}
+.field{display:block;margin:10px 0}
+.field span{display:block;font-size:15px;color:var(--mute)}
+.field input,.field select{width:100%;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit}
+.form-error{color:#d33;font-weight:700;min-height:1.3em;margin:6px 0 0}
+:root[data-theme="dark"] .form-error{color:#ff7b7b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .form-error{color:#ff7b7b}}
+.items .empty{justify-content:center;color:var(--mute);border-bottom:0}
+button{touch-action:manipulation}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.plist .empty{justify-content:center;color:var(--mute);border-bottom:0}

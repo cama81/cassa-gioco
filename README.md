@@ -1,14 +1,22 @@
 # La mia cassa POS
 
-Una cassa per giocare al negozio: si aggiungono i prodotti al carrello (toccandoli o inquadrando il loro QR con la fotocamera), si sceglie quanto dà il cliente e l'app calcola il resto. Funziona **offline** e si può **installare** su telefono e tablet come una vera app.
+Una cassa per giocare al negozio: si aggiungono i prodotti al carrello (toccandoli o inquadrando il loro QR con la fotocamera, con un beep a ogni lettura), si sceglie quanto dà il cliente e l'app calcola il resto. Funziona **offline** e si può **installare** su telefono e tablet come una vera app.
+
+## Cosa può fare
+
+- **Cassa**: carrello, pagamento in contanti (banconote e monete, tasto *Esatto*, calcolo del resto) o con carta.
+- **Scanner QR**: ogni QR viene letto una sola volta finché resta inquadrato; per aggiungere lo stesso prodotto di nuovo si allontana il QR per un istante. Il suono si può spegnere con il tasto 🔊.
+- **Prodotti**: crea, modifica ed elimina prodotti dall'app (nome, emoji, prezzo, genere). Esporta/importa un file di backup.
+- **Incassi**: riepilogo della sessione (vendite, totale, contanti/carta, articoli venduti e cosa è stato venduto). Si azzera solo con il tasto *Azzera incassi*.
+- **Stampa QR**: fogli di QR da ritagliare, filtrabili per genere.
 
 ## Struttura
 
 ```
 index.html              pagina principale
 css/style.css           stile (tema chiaro/scuro automatico)
-js/products.js          categorie e prodotti (qui si cambiano i prezzi)
-js/app.js               logica: carrello, pagamento, scanner QR, stampa QR
+js/products.js          categorie e prodotti iniziali
+js/app.js               logica: carrello, pagamento, prodotti, incassi, scanner QR, stampa QR
 sw.js                   service worker (cache e modalità offline)
 manifest.webmanifest    dati per l'installazione come app
 icons/                  icone dell'app
@@ -27,8 +35,18 @@ python3 -m http.server 8000
 
 ## Modificare i prodotti
 
-Apri `js/products.js` e cambia nome, emoji o prezzo (in **centesimi**: `150` = 1,50 €).
-Non cambiare gli `id` dei prodotti se hai già stampato i QR, perché nei codici c'è scritto l'id.
+Dall'app: scheda **Prodotti**. Le modifiche, gli incassi e le impostazioni sono salvati **sul dispositivo** (`localStorage`): su un altro telefono si parte dai prodotti iniziali, a meno di usare *Esporta* / *Importa*.
+
+Ogni prodotto ha un `id` che resta uguale anche se cambi nome o prezzo: i QR già stampati continuano a funzionare. Se elimini un prodotto, il suo QR non funziona più.
+
+I prodotti iniziali (quelli che compaiono la prima volta o dopo *Ripristina originali*) sono in `js/products.js`; lì i prezzi sono in **centesimi** (`150` = 1,50 €).
+
+## Regolare lo scanner
+
+In cima a `js/app.js`:
+
+- `SCAN_REARM_MS` (predefinito 1200): per quanto tempo il QR deve restare fuori dall'inquadratura prima di poter aggiungere di nuovo lo stesso prodotto.
+- `SCAN_INTERVAL_MS` (100): ogni quanto viene analizzato un fotogramma.
 
 ## Aggiornare l'app dopo una modifica
 

@@ -11,10 +11,9 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<main>
+<main id="app">
 <div class="header-row">
   <h1>
-    <!-- POS Terminal SVG Icon (Solid Background to avoid Android black bug) -->
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
       <rect width="500" height="500" fill="#1f6feb"/>
       <rect x="140" y="100" width="220" height="300" rx="30" fill="#ffffff"/>
@@ -33,81 +32,147 @@
     </svg>
     La mia cassa
   </h1>
-  <button class="btn ghost" id="catMenuBtn" style="padding:8px 12px;font-size:15px">🏷️ Filtri <span id="activeCatLabel">Tutti</span></button>
+  <button type="button" class="btn ghost" id="catMenuBtn" style="padding:8px 12px;font-size:15px">🏷️ Filtri <span id="activeCatLabel">Tutti</span></button>
 </div>
 
-<!-- Sticky Cart Bar right under header -->
-<div class="top-cart-bar" id="topCartBar">
+<button type="button" class="top-cart-bar" id="topCartBar" aria-label="Apri il carrello">
   <span>🛒 Carrello: <span class="top-cart-badge" id="topCartBadge">0</span></span>
   <span id="topCartTotal">0,00 €</span>
+</button>
+
+<div class="tabs" role="group" aria-label="Sezioni">
+  <button type="button" id="tabShop" aria-pressed="true">Cassa</button>
+  <button type="button" id="tabProd" aria-pressed="false">Prodotti</button>
+  <button type="button" id="tabSales" aria-pressed="false">Incassi</button>
+  <button type="button" id="tabQr" aria-pressed="false">Stampa QR</button>
 </div>
 
-<div class="tabs" role="group" aria-label="Modalità">
-  <button id="tabShop" aria-pressed="true">Cassa</button>
-  <button id="tabQr" aria-pressed="false">Stampa QR</button>
-</div>
-
-<section id="shop">
+<!-- CASSA -->
+<section id="shop" aria-label="Cassa">
   <div class="card">
     <div class="row">
       <strong>Scansiona un prodotto</strong>
-      <button class="btn sun" id="qrBtn">Fotocamera QR</button>
+      <span class="row" style="gap:6px">
+        <button type="button" class="btn ghost sound-btn" id="soundBtn" aria-pressed="true" aria-label="Suono dello scanner attivo">🔊</button>
+        <button type="button" class="btn sun" id="qrBtn">Fotocamera QR</button>
+      </span>
     </div>
     <video id="cam" class="hidden" playsinline muted style="width:100%;border-radius:14px;margin-top:8px"></video>
     <canvas id="cv" class="hidden"></canvas>
-    <div class="status" id="scanStatus">Usa la fotocamera per leggere un QR, oppure tocca i prodotti.</div>
+    <div class="status" id="scanStatus" role="status" aria-live="polite">Usa la fotocamera per leggere un QR, oppure tocca i prodotti.</div>
     <div class="grid" id="shopGrid" aria-label="Prodotti (tocca per aggiungere)"></div>
   </div>
 </section>
 
-<section id="qr" class="hidden">
+<!-- PRODOTTI -->
+<section id="prod" class="hidden" aria-label="Gestione prodotti">
+  <div class="card">
+    <div class="row">
+      <strong>I tuoi prodotti</strong>
+      <button type="button" class="btn sun" id="newProdBtn">➕ Nuovo</button>
+    </div>
+    <div class="status" id="prodStatus" role="status" aria-live="polite">Tocca ✏️ per cambiare nome o prezzo. I QR già stampati restano validi.</div>
+    <div id="prodList"></div>
+  </div>
+  <div class="card">
+    <strong>Copia di sicurezza</strong>
+    <p class="muted">I prodotti sono salvati solo su questo dispositivo. Esportali per portarli su un altro telefono o per non perderli.</p>
+    <div class="notes">
+      <button type="button" class="btn ghost" id="exportBtn">Esporta</button>
+      <button type="button" class="btn ghost" id="importBtn">Importa</button>
+      <button type="button" class="btn ghost" id="resetProdBtn">Ripristina originali</button>
+    </div>
+    <input type="file" id="importFile" accept=".json,application/json" class="hidden">
+  </div>
+</section>
+
+<!-- INCASSI -->
+<section id="sales" class="hidden" aria-label="Incassi">
+  <div class="card">
+    <strong>Incassi della sessione</strong>
+    <div class="stats" id="stats"></div>
+  </div>
+  <div class="card">
+    <strong>Cosa hai venduto</strong>
+    <ul class="plist" id="salesList"></ul>
+    <div class="row" style="margin-top:12px">
+      <span class="muted">Si azzera solo quando lo decidi tu.</span>
+      <button type="button" class="btn ghost" id="resetSalesBtn">Azzera incassi</button>
+    </div>
+  </div>
+</section>
+
+<!-- STAMPA QR -->
+<section id="qr" class="hidden" aria-label="Stampa QR">
   <div class="card" id="qrHead">
     <strong>Codici QR dei prodotti</strong>
-    <p>Stampa questa pagina, ritaglia i codici e attaccali ai giocattoli. Poi nella cassa premi “Fotocamera QR” e inquadrali.</p>
-    <button class="btn sun" id="printBtn">Stampa</button>
+    <p>Stampa questa pagina, ritaglia i codici e attaccali ai giocattoli. Poi nella cassa premi “Fotocamera QR” e inquadrali. Con “Filtri” scegli quali stampare.</p>
+    <button type="button" class="btn sun" id="printBtn">Stampa</button>
   </div>
   <div class="qrgrid" id="qrGrid"></div>
 </section>
+</main>
 
-<!-- Slide-out Cart Drawer -->
-<div class="drawer-overlay" id="drawerOverlay"></div>
-<div class="cart-drawer" id="cartDrawer">
+<!-- Finestre (fuori da main: quando una è aperta, main diventa inert) -->
+<div class="drawer-overlay" id="drawerOverlay" inert></div>
+<div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" inert>
   <div class="drawer-header">
-    <span class="drawer-title">🛒 Il conto</span>
-    <button class="close-drawer" id="closeDrawer">✕</button>
+    <span class="drawer-title" id="drawerTitle">🛒 Il conto</span>
+    <button type="button" class="close-drawer" id="closeDrawer" aria-label="Chiudi il carrello">✕</button>
   </div>
   <ul class="items" id="items"></ul>
-  <div class="total" id="total">0,00 €</div>
+  <div class="total" id="total" aria-live="polite">0,00 €</div>
   <div class="row" style="margin-bottom:12px">
-    <button class="btn ghost" id="clearBtn">Svuota</button>
-    <button class="btn" id="payBtn" disabled>Paga</button>
+    <button type="button" class="btn ghost" id="clearBtn" disabled>Svuota</button>
+    <button type="button" class="btn" id="payBtn" disabled>Paga</button>
   </div>
 
   <div class="card hidden" id="payCard" style="margin-top:auto">
     <strong>Quanto dà il cliente?</strong>
     <div class="notes" id="notes"></div>
-    <div class="big" id="given">Dato: 0,00 €</div>
-    <div class="big" id="change"></div>
+    <div class="notes">
+      <button type="button" class="btn ghost" id="exactBtn">Esatto</button>
+      <button type="button" class="btn ghost" id="cardBtn">💳 Paga con carta</button>
+    </div>
+    <div class="big" id="given" aria-live="polite">Dato: 0,00 €</div>
+    <div class="big" id="change" aria-live="polite"></div>
     <div class="row" style="margin-top:8px">
-      <button class="btn ghost" id="resetGiven">Azzera</button>
-      <button class="btn ok" id="doneBtn" disabled>Fatto!</button>
+      <button type="button" class="btn ghost" id="resetGiven">Azzera</button>
+      <button type="button" class="btn ok" id="doneBtn" disabled>Fatto!</button>
     </div>
   </div>
 </div>
 
-<!-- Category Filter Modal -->
-<div class="modal-overlay" id="catModal">
-  <div class="modal-content">
+<div class="modal-overlay" id="catModal" inert>
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="catTitle">
     <div class="row">
-      <strong>Filtra per genere</strong>
-      <button class="close-drawer" id="closeCatModal" style="font-size:20px">✕</button>
+      <strong id="catTitle">Filtra per genere</strong>
+      <button type="button" class="close-drawer" id="closeCatModal" aria-label="Chiudi" style="font-size:20px">✕</button>
     </div>
     <div class="modal-chips" id="modalChips"></div>
   </div>
 </div>
 
-<p class="status" id="support"></p>
-</main>
+<div class="modal-overlay" id="prodModal" inert>
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="prodTitle">
+    <form id="prodForm" novalidate>
+      <div class="row">
+        <strong id="prodTitle">Nuovo prodotto</strong>
+        <button type="button" class="close-drawer" id="closeProdModal" aria-label="Chiudi" style="font-size:20px">✕</button>
+      </div>
+      <label class="field"><span>Emoji</span><input id="pEmoji" type="text" autocomplete="off" placeholder="🍎" maxlength="12"></label>
+      <label class="field"><span>Nome</span><input id="pName" type="text" autocomplete="off" maxlength="30" required></label>
+      <label class="field"><span>Prezzo in euro</span><input id="pPrice" type="text" inputmode="decimal" autocomplete="off" placeholder="1,50" required></label>
+      <label class="field"><span>Genere</span><select id="pCat"></select></label>
+      <p class="muted hidden" id="pNote">Il codice QR di questo prodotto non cambia: quelli già stampati restano validi.</p>
+      <p class="form-error" id="pError" role="alert"></p>
+      <div class="row" style="margin-top:12px">
+        <button type="button" class="btn ghost" id="cancelProd">Annulla</button>
+        <button type="submit" class="btn ok" id="saveProd">Salva</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <script src="vendor/jsQR.js"></script>
 <script src="vendor/qrcode.js"></script>

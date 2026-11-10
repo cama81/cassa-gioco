@@ -1,4 +1,5 @@
 // Dati del negozio: categorie e prodotti.
+// Sono i prodotti iniziali: dalla scheda "Prodotti" dell'app li puoi modificare (le modifiche restano sul dispositivo).
 // I prezzi (c) sono in centesimi. Gli id sono scritti nei QR stampati: non cambiarli
 // se hai già stampato i codici.
 var CATS = [
@@ -10,7 +11,7 @@ var CATS = [
   { k: "vestiti", e: "👕", n: "Vestiti" }
 ];
 
-var PRODUCTS = [
+var DEFAULT_PRODUCTS = [
   { cat: "alimentari", id: "mela", e: "🍎", n: "Mela", c: 50 },
   { cat: "alimentari", id: "pane", e: "🍞", n: "Pane", c: 120 },
   { cat: "alimentari", id: "latte", e: "🥛", n: "Latte", c: 150 },
