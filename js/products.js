@@ -8,7 +8,8 @@ var CATS = [
   { k: "elettronica", e: "🎧", n: "Elettronica" },
   { k: "libri", e: "📚", n: "Libri" },
   { k: "giocattoli", e: "🧸", n: "Giocattoli" },
-  { k: "vestiti", e: "👕", n: "Vestiti" }
+  { k: "vestiti", e: "👕", n: "Vestiti" },
+  { k: "principesse", e: "👸", n: "Principesse" }
 ];
 
 var DEFAULT_PRODUCTS = [
@@ -39,5 +40,23 @@ var DEFAULT_PRODUCTS = [
   { cat: "vestiti", id: "maglietta", e: "👕", n: "Maglietta", c: 1000 },
   { cat: "vestiti", id: "pantaloni", e: "👖", n: "Pantaloni", c: 2000 },
   { cat: "vestiti", id: "calzini", e: "🧦", n: "Calzini", c: 400 },
-  { cat: "vestiti", id: "cappello", e: "🧢", n: "Cappello", c: 700 }
+  { cat: "vestiti", id: "cappello", e: "🧢", n: "Cappello", c: 700 },
+  { cat: "principesse", id: "biancaneve", e: "🍎", n: "Biancaneve", c: 1800 },
+  { cat: "principesse", id: "cenerentola", e: "👠", n: "Cenerentola", c: 1800 },
+  { cat: "principesse", id: "aurora", e: "💤", n: "Aurora", c: 1800 },
+  { cat: "principesse", id: "ariel", e: "🧜‍♀️", n: "Ariel", c: 1800 },
+  { cat: "principesse", id: "belle", e: "🌹", n: "Belle", c: 1800 },
+  { cat: "principesse", id: "jasmine", e: "🪔", n: "Jasmine", c: 1800 },
+  { cat: "principesse", id: "pocahontas", e: "🍃", n: "Pocahontas", c: 1800 },
+  { cat: "principesse", id: "mulan", e: "🐉", n: "Mulan", c: 1800 },
+  { cat: "principesse", id: "tiana", e: "🐸", n: "Tiana", c: 1800 },
+  { cat: "principesse", id: "rapunzel", e: "🌻", n: "Rapunzel", c: 1800 },
+  { cat: "principesse", id: "merida", e: "🏹", n: "Merida", c: 1800 },
+  { cat: "principesse", id: "vaiana", e: "🌊", n: "Vaiana", c: 1800 },
+  { cat: "principesse", id: "anna", e: "🧣", n: "Anna", c: 1800 },
+  { cat: "principesse", id: "elsa", e: "❄️", n: "Elsa", c: 1800 },
+  { cat: "principesse", id: "castello", e: "🏰", n: "Castello delle principesse", c: 8000 },
+  { cat: "principesse", id: "carrozza", e: "🎠", n: "Carrozza", c: 3000 },
+  { cat: "principesse", id: "corona", e: "👑", n: "Corona", c: 500 },
+  { cat: "principesse", id: "bacchetta", e: "🪄", n: "Bacchetta magica", c: 400 }
 ];

@@ -1,0 +1,131 @@
+{
+  "versione": 1,
+  "products": [
+    {
+      "id": "biancaneve",
+      "cat": "principesse",
+      "e": "🍎",
+      "n": "Biancaneve",
+      "c": 1800
+    },
+    {
+      "id": "cenerentola",
+      "cat": "principesse",
+      "e": "👠",
+      "n": "Cenerentola",
+      "c": 1800
+    },
+    {
+      "id": "aurora",
+      "cat": "principesse",
+      "e": "💤",
+      "n": "Aurora",
+      "c": 1800
+    },
+    {
+      "id": "ariel",
+      "cat": "principesse",
+      "e": "🧜‍♀️",
+      "n": "Ariel",
+      "c": 1800
+    },
+    {
+      "id": "belle",
+      "cat": "principesse",
+      "e": "🌹",
+      "n": "Belle",
+      "c": 1800
+    },
+    {
+      "id": "jasmine",
+      "cat": "principesse",
+      "e": "🪔",
+      "n": "Jasmine",
+      "c": 1800
+    },
+    {
+      "id": "pocahontas",
+      "cat": "principesse",
+      "e": "🍃",
+      "n": "Pocahontas",
+      "c": 1800
+    },
+    {
+      "id": "mulan",
+      "cat": "principesse",
+      "e": "🐉",
+      "n": "Mulan",
+      "c": 1800
+    },
+    {
+      "id": "tiana",
+      "cat": "principesse",
+      "e": "🐸",
+      "n": "Tiana",
+      "c": 1800
+    },
+    {
+      "id": "rapunzel",
+      "cat": "principesse",
+      "e": "🌻",
+      "n": "Rapunzel",
+      "c": 1800
+    },
+    {
+      "id": "merida",
+      "cat": "principesse",
+      "e": "🏹",
+      "n": "Merida",
+      "c": 1800
+    },
+    {
+      "id": "vaiana",
+      "cat": "principesse",
+      "e": "🌊",
+      "n": "Vaiana",
+      "c": 1800
+    },
+    {
+      "id": "anna",
+      "cat": "principesse",
+      "e": "🧣",
+      "n": "Anna",
+      "c": 1800
+    },
+    {
+      "id": "elsa",
+      "cat": "principesse",
+      "e": "❄️",
+      "n": "Elsa",
+      "c": 1800
+    },
+    {
+      "id": "castello",
+      "cat": "principesse",
+      "e": "🏰",
+      "n": "Castello delle principesse",
+      "c": 8000
+    },
+    {
+      "id": "carrozza",
+      "cat": "principesse",
+      "e": "🎠",
+      "n": "Carrozza",
+      "c": 3000
+    },
+    {
+      "id": "corona",
+      "cat": "principesse",
+      "e": "👑",
+      "n": "Corona",
+      "c": 500
+    },
+    {
+      "id": "bacchetta",
+      "cat": "principesse",
+      "e": "🪄",
+      "n": "Bacchetta magica",
+      "c": 400
+    }
+  ]
+}

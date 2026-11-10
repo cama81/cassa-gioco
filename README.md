@@ -6,7 +6,7 @@ Una cassa per giocare al negozio: si aggiungono i prodotti al carrello (toccando
 
 - **Cassa**: carrello, pagamento in contanti (banconote e monete, tasto *Esatto*, calcolo del resto) o con carta.
 - **Scanner QR**: ogni QR viene letto una sola volta finché resta inquadrato; per aggiungere lo stesso prodotto di nuovo si allontana il QR per un istante. Il suono si può spegnere con il tasto 🔊.
-- **Prodotti**: crea, modifica ed elimina prodotti dall'app (nome, emoji, prezzo, genere). Esporta/importa un file di backup.
+- **Prodotti**: crea, modifica ed elimina prodotti dall'app (nome, emoji, prezzo, genere). Esporta un file di backup e importa file di prodotti (*Aggiungi da file* unisce, *Sostituisci da file* rimpiazza tutto).
 - **Incassi**: riepilogo della sessione (vendite, totale, contanti/carta, articoli venduti e cosa è stato venduto). Si azzera solo con il tasto *Azzera incassi*.
 - **Stampa QR**: fogli di QR da ritagliare, filtrabili per genere.
 
@@ -40,6 +40,15 @@ Dall'app: scheda **Prodotti**. Le modifiche, gli incassi e le impostazioni sono 
 Ogni prodotto ha un `id` che resta uguale anche se cambi nome o prezzo: i QR già stampati continuano a funzionare. Se elimini un prodotto, il suo QR non funziona più.
 
 I prodotti iniziali (quelli che compaiono la prima volta o dopo *Ripristina originali*) sono in `js/products.js`; lì i prezzi sono in **centesimi** (`150` = 1,50 €).
+
+### Prodotti pronti da importare
+
+In `esempi/` ci sono file `.json` da importare con **Prodotti → Aggiungi da file**:
+
+- `principesse.json`: 14 principesse, castello, carrozza, corona e bacchetta magica (genere *Principesse*).
+
+Formato di un file: `{ "products": [ { "id": "pizza", "cat": "alimentari", "e": "🍕", "n": "Pizza", "c": 450 } ] }`.
+`cat` è uno tra `alimentari`, `elettronica`, `libri`, `giocattoli`, `vestiti`, `principesse`; `c` è il prezzo in centesimi; `id` può contenere solo lettere, numeri, `-` e `_`.
 
 ## Regolare lo scanner
 

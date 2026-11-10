@@ -446,10 +446,12 @@ $("exportBtn").onclick = function () {
   $("prodStatus").textContent = "File cassa-prodotti.json creato.";
 };
 
-$("importBtn").onclick = function () { $("importFile").click(); };
+var importMode = "merge"; // "merge" = aggiungi/aggiorna, "replace" = sostituisci tutto
+$("importBtn").onclick = function () { importMode = "merge"; $("importFile").click(); };
+$("importReplaceBtn").onclick = function () { importMode = "replace"; $("importFile").click(); };
 $("importFile").addEventListener("change", function () {
   var f = this.files && this.files[0];
-  var input = this;
+  var input = this, mode = importMode;
   if (!f) return;
   var r = new FileReader();
   r.onload = function () {
@@ -457,11 +459,26 @@ $("importFile").addEventListener("change", function () {
     try { var j = JSON.parse(r.result); list = cleanList(Array.isArray(j) ? j : j.products); } catch (e) {}
     if (!list || !list.length) {
       $("prodStatus").textContent = "Il file non contiene prodotti validi.";
-    } else if (confirm("Sostituire i " + products.length + " prodotti attuali con i " + list.length + " del file?")) {
-      products = list;
-      saveProducts();
-      refreshAll();
-      $("prodStatus").textContent = "Importati " + list.length + " prodotti.";
+    } else if (mode === "replace") {
+      if (confirm("Sostituire i " + products.length + " prodotti attuali con i " + list.length + " del file?")) {
+        products = list;
+        saveProducts();
+        refreshAll();
+        $("prodStatus").textContent = "Importati " + list.length + " prodotti (sostituiti tutti).";
+      }
+    } else {
+      var nuovi = list.filter(function (p) { return !byId[p.id]; }).length;
+      var agg = list.length - nuovi;
+      var msg = "Aggiungere " + nuovi + " prodotti nuovi" + (agg ? " e aggiornare " + agg + " già presenti" : "") + "?";
+      if (confirm(msg)) {
+        list.forEach(function (p) {
+          var old = byId[p.id];
+          if (old) Object.assign(old, p); else products.push(p);
+        });
+        saveProducts();
+        refreshAll();
+        $("prodStatus").textContent = "Aggiunti " + nuovi + " prodotti" + (agg ? ", aggiornati " + agg : "") + ".";
+      }
     }
     input.value = "";
   };
