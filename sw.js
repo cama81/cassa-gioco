@@ -1,14 +1,15 @@
 // Service worker della cassa: precache dell'app e funzionamento offline.
-// Quando modifichi un qualsiasi file dell'app, incrementa VERSION così
+// La versione si cambia in js/version.js (APP_VERSION): ad ogni rilascio
 // i dispositivi scaricano la nuova versione.
-var VERSION = "v3";
-var CACHE = "cassa-" + VERSION;
+importScripts("js/version.js");
+var CACHE = "cassa-" + APP_VERSION;
 
 var ASSETS = [
   "./",
   "index.html",
   "manifest.webmanifest",
   "css/style.css",
+  "js/version.js",
   "js/products.js",
   "js/app.js",
   "vendor/jsQR.js",

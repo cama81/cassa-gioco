@@ -32,7 +32,12 @@
     </svg>
     La mia cassa
   </h1>
-  <button type="button" class="btn ghost" id="catMenuBtn" style="padding:8px 12px;font-size:15px">🏷️ Filtri <span id="activeCatLabel">Tutti</span></button>
+  <div class="header-actions">
+    <button type="button" class="btn ghost" id="catMenuBtn" aria-label="Filtra per genere" style="padding:8px 12px;font-size:15px">🏷️ <span class="flabel">Filtri </span><span id="activeCatLabel">Tutti</span></button>
+    <button type="button" class="btn ghost icon-only" id="menuBtn" aria-label="Menu" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="19" r="2.2"/></svg>
+    </button>
+  </div>
 </div>
 
 <button type="button" class="top-cart-bar" id="topCartBar" aria-label="Apri il carrello">
@@ -40,11 +45,13 @@
   <span id="topCartTotal">0,00 €</span>
 </button>
 
-<div class="tabs" role="group" aria-label="Sezioni">
+<div class="tabs" id="mainTabs" role="group" aria-label="Sezioni">
   <button type="button" id="tabShop" aria-pressed="true">Cassa</button>
-  <button type="button" id="tabProd" aria-pressed="false">Prodotti</button>
   <button type="button" id="tabSales" aria-pressed="false">Incassi</button>
-  <button type="button" id="tabQr" aria-pressed="false">Stampa QR</button>
+</div>
+<div class="backbar hidden" id="backBar">
+  <button type="button" class="btn ghost" id="backBtn">← Torna alla cassa</button>
+  <strong id="backTitle"></strong>
 </div>
 
 <!-- CASSA -->
@@ -144,6 +151,22 @@
   </div>
 </div>
 
+<div class="modal-overlay menu-pop" id="menuModal" inert>
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="menuTitle">
+    <div class="row">
+      <strong id="menuTitle">Menu</strong>
+      <button type="button" class="close-drawer" id="closeMenu" aria-label="Chiudi il menu" style="font-size:20px">✕</button>
+    </div>
+    <button type="button" class="menu-item" id="menuQr"><span aria-hidden="true">🖨️</span> Stampa QR</button>
+    <button type="button" class="menu-item" id="menuProd"><span aria-hidden="true">🛠️</span> Prodotti</button>
+    <div class="about">
+      <strong id="aboutName">La mia cassa POS</strong>
+      <span id="aboutVersion"></span>
+      <span id="aboutAuthor"></span>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="catModal" inert>
   <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="catTitle">
     <div class="row">
@@ -177,6 +200,7 @@
 
 <script src="vendor/jsQR.js"></script>
 <script src="vendor/qrcode.js"></script>
+<script src="js/version.js"></script>
 <script src="js/products.js"></script>
 <script src="js/app.js"></script>
 </body>

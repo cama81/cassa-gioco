@@ -34,7 +34,7 @@ h1 svg{width:36px;height:36px;border-radius:8px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
 
 .qrgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}.qrc{background:#fff;color:#000;border:1px dashed #888;border-radius:10px;padding:8px;text-align:center;break-inside:avoid}.qrc svg{width:100%;height:auto;display:block}
-@media print{.tabs,#shop,#tags,h1,.top-cart-bar,#qrHead,.header-row,.cart-drawer,.drawer-overlay,.modal-overlay,#prod,#sales{display:none!important}body{background:#fff}}
+@media print{.tabs,#shop,#tags,h1,.top-cart-bar,#qrHead,#backBar,.header-row,.cart-drawer,.drawer-overlay,.modal-overlay,#prod,#sales{display:none!important}body{background:#fff}}
 
 .prod{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px 4px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;font:inherit;cursor:pointer;touch-action:manipulation;min-height:110px}
 .prod[aria-pressed="true"]{border-color:var(--main);box-shadow:0 0 0 3px var(--main)}
@@ -67,7 +67,7 @@ h1 svg{width:36px;height:36px;border-radius:8px}
 .status{padding:10px 12px;border-radius:12px;background:var(--bg);color:var(--mute);margin:8px 0}
 .notes{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
 .big{font-size:24px;font-weight:700}
-.hidden{display:none}
+.hidden{display:none!important}
 
 /* Category Modal / Menu */
 .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s}
@@ -107,3 +107,16 @@ button{touch-action:manipulation}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 .plist .empty{justify-content:center;color:var(--mute);border-bottom:0}
 .chip{font-size:16px;padding:10px 6px;white-space:nowrap}
+
+/* ---- Menu ⋮ e barra "Torna alla cassa" ---- */
+.header-actions{display:flex;align-items:center;gap:8px;flex:none}
+.icon-only{padding:8px 10px;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px}
+.backbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.backbar .btn{padding:10px 14px}
+.menu-pop{align-items:flex-start;justify-content:flex-end;padding:calc(env(safe-area-inset-top,0px) + 62px) 12px 0}
+.menu-pop .modal-content{width:100%;max-width:300px;transform-origin:top right}
+.menu-item{display:flex;align-items:center;gap:12px;width:100%;margin-top:10px;padding:14px 12px;border:2px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font:inherit;font-weight:700;text-align:left;cursor:pointer}
+.menu-item span{font-size:24px;line-height:1}
+.about{display:grid;gap:2px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line);color:var(--mute);font-size:15px}
+.about strong{color:var(--ink)}
+@media (max-width:420px){.flabel{display:none}h1{font-size:22px}h1 svg{width:30px;height:30px}}

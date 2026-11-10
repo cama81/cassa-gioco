@@ -1,6 +1,6 @@
 // Logica della cassa: carrello, pagamento, prodotti modificabili, incassi,
 // scanner QR (con beep) e stampa dei QR.
-// Richiede: vendor/jsQR.js, vendor/qrcode.js, js/products.js
+// Richiede: vendor/jsQR.js, vendor/qrcode.js, js/version.js, js/products.js
 
 var PREFIX = "cassa:"; // ogni QR contiene "cassa:" + id del prodotto
 var KEY_PRODUCTS = "cassa.products.v1";
@@ -265,7 +265,8 @@ $("clearBtn").onclick = function () {
 var DLG = {
   drawer: { els: ["cartDrawer", "drawerOverlay"], focus: "closeDrawer" },
   cats: { els: ["catModal"], focus: "closeCatModal" },
-  prod: { els: ["prodModal"], focus: "pName" }
+  prod: { els: ["prodModal"], focus: "pName" },
+  menu: { els: ["menuModal"], focus: "menuQr" }
 };
 var openDlg = null, opener = null;
 
@@ -320,21 +321,43 @@ function buildModalChips() {
   });
 }
 
-// ---------------------------------------------------------------- schede (tab)
-var TABS = ["shop", "prod", "sales", "qr"];
-function showTab(t) {
+// ---------------------------------------------------------------- schermate
+// Cassa e Incassi sono le schede principali. Stampa QR e Prodotti sono "utility"
+// e si aprono solo dal menu ⋮ in alto: così non sono a portata di tocco nella cassa.
+var VIEWS = ["shop", "sales", "prod", "qr"];
+var VIEW_TITLES = { prod: "🛠️ Prodotti", qr: "🖨️ Stampa QR" };
+
+function showView(t) {
   if (t !== "shop") stopCam();
-  TABS.forEach(function (k) {
-    $(k).classList.toggle("hidden", k !== t);
-    $("tab" + k.charAt(0).toUpperCase() + k.slice(1)).setAttribute("aria-pressed", String(k === t));
-  });
+  VIEWS.forEach(function (k) { $(k).classList.toggle("hidden", k !== t); });
+  var util = t === "prod" || t === "qr";
+  $("mainTabs").classList.toggle("hidden", util);
+  $("backBar").classList.toggle("hidden", !util);
+  if (util) $("backTitle").textContent = VIEW_TITLES[t];
+  $("tabShop").setAttribute("aria-pressed", String(t === "shop"));
+  $("tabSales").setAttribute("aria-pressed", String(t === "sales"));
   $("catMenuBtn").classList.toggle("hidden", t === "prod" || t === "sales");
   if (t === "sales") renderSales();
+  window.scrollTo(0, 0);
 }
-$("tabShop").onclick = function () { showTab("shop"); };
-$("tabProd").onclick = function () { showTab("prod"); };
-$("tabSales").onclick = function () { showTab("sales"); };
-$("tabQr").onclick = function () { showTab("qr"); };
+$("tabShop").onclick = function () { showView("shop"); };
+$("tabSales").onclick = function () { showView("sales"); };
+$("backBtn").onclick = function () { showView("shop"); $("tabShop").focus(); };
+
+// Menu ⋮
+function openUtility(v) {
+  closeDialog(true);
+  showView(v);
+  $("backBtn").focus();
+}
+$("menuBtn").onclick = function () { openDialog("menu"); };
+$("closeMenu").onclick = function () { closeDialog(); };
+$("menuModal").onclick = function (e) { if (e.target === $("menuModal")) closeDialog(); };
+$("menuQr").onclick = function () { openUtility("qr"); };
+$("menuProd").onclick = function () { openUtility("prod"); };
+$("aboutName").textContent = typeof APP_NAME !== "undefined" ? APP_NAME : "La mia cassa POS";
+$("aboutVersion").textContent = "Versione " + (typeof APP_VERSION !== "undefined" ? APP_VERSION : "—");
+$("aboutAuthor").textContent = "Autore: " + (typeof APP_AUTHOR !== "undefined" ? APP_AUTHOR : "—");
 $("printBtn").onclick = function () { window.print(); };
 
 // ---------------------------------------------------------------- gestione prodotti
